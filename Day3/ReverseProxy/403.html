@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>403 - Access Denied</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #1a1a00;
+            color: #ffff99;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .error-container {
+            text-align: center;
+        }
+        .error-code {
+            font-size: 150px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+            margin: 0;
+            line-height: 1;
+        }
+        .error-message {
+            font-size: 28px;
+            margin: 20px 0;
+            color: #ffffff;
+        }
+        .error-description {
+            font-size: 16px;
+            color: #999966;
+            margin-bottom: 30px;
+        }
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        .info-box {
+            background: rgba(255, 204, 0, 0.1);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: inline-block;
+        }
+        .info-box p {
+            color: #cccc66;
+            font-size: 14px;
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="icon">🚫</div>
+        <p class="error-code">403</p>
+        <p class="error-message">Access Denied</p>
+        <p class="error-description">You don't have permission to access this resource.</p>
+        
+        <div class="info-box">
+            <p>This area is restricted by IP address.</p>
+            <p>Check Nginx config: <code>allow</code> / <code>deny</code> directives</p>
+        </div>
+    </div>
+</body>
+</html>

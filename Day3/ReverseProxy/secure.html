@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Area</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .secure-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        h1 { 
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        .success-badge {
+            display: inline-block;
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #4ade80;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 20px 0;
+        }
+        .success-badge span {
+            color: #4ade80;
+            font-weight: bold;
+        }
+        .info {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .info p {
+            margin: 8px 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="secure-box">
+        <div class="icon">🔒</div>
+        <h1>Secure Area</h1>
+        
+        <div class="success-badge">
+            <span>✓ Authentication Successful</span>
+        </div>
+        
+        <p>Congratulations! You passed Basic Authentication.</p>
+        
+        <div class="info">
+            <p>This page is protected by <code>auth_basic</code></p>
+            <p>Credentials stored in <code>/etc/nginx/.htpasswd</code></p>
+            <p>Created with <code>htpasswd</code> command</p>
+        </div>
+    </div>
+</body>
+</html>

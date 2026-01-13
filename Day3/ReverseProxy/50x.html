@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Error</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #1a0000;
+            color: #ffcccc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .error-container {
+            text-align: center;
+        }
+        .error-code {
+            font-size: 150px;
+            font-weight: bold;
+            color: #ff4444;
+            text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+            margin: 0;
+            line-height: 1;
+        }
+        .error-message {
+            font-size: 28px;
+            margin: 20px 0;
+            color: #ffffff;
+        }
+        .error-description {
+            font-size: 16px;
+            color: #996666;
+            margin-bottom: 30px;
+        }
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        .troubleshoot {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            padding: 25px 35px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+            display: inline-block;
+        }
+        .troubleshoot h3 {
+            color: #ff6666;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .troubleshoot ul {
+            list-style: none;
+        }
+        .troubleshoot li {
+            color: #cc9999;
+            font-size: 14px;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .troubleshoot li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #ff4444;
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #ff8888;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="icon">⚠️</div>
+        <p class="error-code">5xx</p>
+        <p class="error-message">Server Error</p>
+        <p class="error-description">Something went wrong on our end. Please try again later.</p>
+        
+        <div class="troubleshoot">
+            <h3>Common Causes:</h3>
+            <ul>
+                <li><code>502 Bad Gateway</code> - Backend server not responding</li>
+                <li><code>503 Service Unavailable</code> - Server overloaded</li>
+                <li><code>504 Gateway Timeout</code> - Backend too slow</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

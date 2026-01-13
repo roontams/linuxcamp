@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>404 - Page Not Found</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f0f23;
+            color: #cccccc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .error-container {
+            text-align: center;
+        }
+        .error-code {
+            font-size: 150px;
+            font-weight: bold;
+            color: #00d9ff;
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+            margin: 0;
+            line-height: 1;
+        }
+        .error-message {
+            font-size: 28px;
+            margin: 20px 0;
+            color: #ffffff;
+        }
+        .error-description {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .home-link {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #00d9ff;
+            color: #0f0f23;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .home-link:hover {
+            background: #00b8d9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 217, 255, 0.3);
+        }
+        .decoration {
+            margin-top: 50px;
+            font-size: 14px;
+            color: #444;
+        }
+        .decoration code {
+            color: #00d9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <p class="error-code">404</p>
+        <p class="error-message">Page Not Found</p>
+        <p class="error-description">The page you're looking for doesn't exist or has been moved.</p>
+        <a href="/" class="home-link">← Back to Home</a>
+        <p class="decoration">Linux Camp Day 3 - Custom Error Page</p>
+    </div>
+</body>
+</html>
