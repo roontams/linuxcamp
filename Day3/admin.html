@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .header-bar {
+            background: #2d2d2d;
+            border-bottom: 2px solid #00ff41;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-bar h1 {
+            font-size: 18px;
+            color: #00ff41;
+            font-weight: normal;
+        }
+
+        .status-indicator {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .led {
+            width: 8px;
+            height: 8px;
+            background: #00ff41;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+
+        .container {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-box {
+            background: #252525;
+            border: 1px solid #404040;
+            padding: 16px;
+        }
+
+        .info-box h3 {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            font-size: 24px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #252525;
+            border: 1px solid #404040;
+            margin-bottom: 24px;
+        }
+
+        thead {
+            background: #2d2d2d;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 11px;
+            color: #00ff41;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: normal;
+            border-bottom: 1px solid #404040;
+        }
+
+        td {
+            padding: 12px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #333;
+        }
+
+        tbody tr:hover {
+            background: #2a2a2a;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-ok {
+            color: #00ff41;
+        }
+
+        .status-warn {
+            color: #ffa500;
+        }
+
+        .bar-graph {
+            background: #1a1a1a;
+            height: 8px;
+            width: 100%;
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .bar-fill {
+            background: #00ff41;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #00ff41;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #404040;
+        }
+
+        .log-entry {
+            background: #252525;
+            border: 1px solid #404040;
+            padding: 16px;
+            font-size: 12px;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .log-entry::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-entry::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .log-entry::-webkit-scrollbar-thumb {
+            background: #404040;
+        }
+
+        .log-line {
+            padding: 4px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .log-time {
+            color: #666;
+        }
+
+        .log-level-info {
+            color: #00ff41;
+        }
+
+        .log-level-warn {
+            color: #ffa500;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #404040;
+            margin-top: 32px;
+        }
+
+        .metric-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .metric-bar-label {
+            min-width: 80px;
+            color: #888;
+        }
+
+        .metric-bar-container {
+            flex: 1;
+            background: #1a1a1a;
+            height: 20px;
+            position: relative;
+        }
+
+        .metric-bar-value {
+            background: #00ff41;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 11px;
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <h1>SYSTEM ADMINISTRATION PANEL</h1>
+        <div class="status-indicator">
+            <div class="status-item">
+                <div class="led"></div>
+                <span>NGINX ACTIVE</span>
+            </div>
+            <div class="status-item">
+                <span>PORT: 8080</span>
+            </div>
+            <div class="status-item">
+                <span id="current-time">--:--:--</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="info-grid">
+            <div class="info-box">
+                <h3>System Uptime</h3>
+                <div class="info-value" id="uptime">72:15:33</div>
+                <div class="info-label">hrs:min:sec</div>
+            </div>
+            <div class="info-box">
+                <h3>Total Requests</h3>
+                <div class="info-value">15,847</div>
+                <div class="info-label">since last restart</div>
+            </div>
+            <div class="info-box">
+                <h3>Active Connections</h3>
+                <div class="info-value">23</div>
+                <div class="info-label">current sessions</div>
+            </div>
+            <div class="info-box">
+                <h3>Response Time</h3>
+                <div class="info-value">12<span style="font-size: 16px; color: #888;">ms</span></div>
+                <div class="info-label">average latency</div>
+            </div>
+        </div>
+
+        <div class="section-title">RESOURCE USAGE</div>
+        <div class="info-box" style="margin-bottom: 24px;">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="metric-bar">
+                    <div class="metric-bar-label">CPU</div>
+                    <div class="metric-bar-container">
+                        <div class="metric-bar-value" style="width: 34%;">34%</div>
+                    </div>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-bar-label">Memory</div>
+                    <div class="metric-bar-container">
+                        <div class="metric-bar-value" style="width: 58%;">58%</div>
+                    </div>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-bar-label">Disk I/O</div>
+                    <div class="metric-bar-container">
+                        <div class="metric-bar-value" style="width: 21%;">21%</div>
+                    </div>
+                </div>
+                <div class="metric-bar">
+                    <div class="metric-bar-label">Network</div>
+                    <div class="metric-bar-container">
+                        <div class="metric-bar-value" style="width: 45%;">45%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">ACTIVE SERVICES</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Port</th>
+                    <th>Status</th>
+                    <th>PID</th>
+                    <th>Memory</th>
+                    <th>Uptime</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>nginx</td>
+                    <td>80, 8080</td>
+                    <td class="status-ok">RUNNING</td>
+                    <td>1024</td>
+                    <td>45.2 MB</td>
+                    <td>72h 15m</td>
+                </tr>
+                <tr>
+                    <td>sshd</td>
+                    <td>22</td>
+                    <td class="status-ok">RUNNING</td>
+                    <td>852</td>
+                    <td>12.8 MB</td>
+                    <td>72h 15m</td>
+                </tr>
+                <tr>
+                    <td>systemd</td>
+                    <td>-</td>
+                    <td class="status-ok">RUNNING</td>
+                    <td>1</td>
+                    <td>8.1 MB</td>
+                    <td>72h 15m</td>
+                </tr>
+                <tr>
+                    <td>cron</td>
+                    <td>-</td>
+                    <td class="status-ok">RUNNING</td>
+                    <td>743</td>
+                    <td>3.2 MB</td>
+                    <td>72h 15m</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">RECENT ACCESS LOG</div>
+        <div class="log-entry">
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:42:18]</span>
+                <span class="log-level-info">[INFO]</span>
+                192.168.1.105 - GET /index.html - 200 OK (12ms)
+            </div>
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:42:15]</span>
+                <span class="log-level-info">[INFO]</span>
+                192.168.1.105 - GET /styles.css - 200 OK (3ms)
+            </div>
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:41:58]</span>
+                <span class="log-level-info">[INFO]</span>
+                192.168.1.42 - GET / - 200 OK (8ms)
+            </div>
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:41:33]</span>
+                <span class="log-level-warn">[WARN]</span>
+                192.168.1.87 - GET /admin - 404 Not Found
+            </div>
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:41:12]</span>
+                <span class="log-level-info">[INFO]</span>
+                192.168.1.105 - POST /api/status - 200 OK (145ms)
+            </div>
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:40:55]</span>
+                <span class="log-level-info">[INFO]</span>
+                192.168.1.23 - GET /index.html - 200 OK (7ms)
+            </div>
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:40:33]</span>
+                <span class="log-level-info">[INFO]</span>
+                192.168.1.105 - GET /favicon.ico - 404 Not Found
+            </div>
+            <div class="log-line">
+                <span class="log-time">[2025-01-14 15:40:21]</span>
+                <span class="log-level-info">[INFO]</span>
+                192.168.1.67 - GET / - 200 OK (11ms)
+            </div>
+        </div>
+
+        <div class="footer">
+            Ubuntu 22.04 LTS | Nginx/1.18.0 | Admin Panel v1.0 | Linux Infrastructure Camp 2025
+        </div>
+    </div>
+
+    <script>
+        // 현재 시간 업데이트
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ko-KR', { hour12: false });
+            document.getElementById('current-time').textContent = timeStr;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Uptime 카운터 (초 단위로 증가)
+        let uptimeSeconds = 72 * 3600 + 15 * 60 + 33; // 72시간 15분 33초
+        function updateUptime() {
+            uptimeSeconds++;
+            const hours = Math.floor(uptimeSeconds / 3600);
+            const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+            const seconds = uptimeSeconds % 60;
+            document.getElementById('uptime').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        setInterval(updateUptime, 1000);
+    </script>
+</body>
+</html>
