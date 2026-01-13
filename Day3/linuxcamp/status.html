@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>htop@linux-camp:~</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+        
+        .terminal {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .terminal-header {
+            background: #161b22;
+            padding: 8px 16px;
+            border: 1px solid #30363d;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .btn-close { background: #f85149; }
+        .btn-minimize { background: #d29922; }
+        .btn-maximize { background: #3fb950; }
+        
+        .terminal-title {
+            color: #8b949e;
+            font-size: 12px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .terminal-body {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 16px;
+        }
+        
+        .htop-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .meter-group h3 {
+            color: #8b949e;
+            font-size: 11px;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        
+        .meter {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+            gap: 8px;
+        }
+        
+        .meter-label {
+            width: 36px;
+            color: #8b949e;
+            font-size: 11px;
+        }
+        
+        .meter-bar {
+            flex: 1;
+            height: 12px;
+            background: #21262d;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .meter-fill {
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .meter-fill.cpu { background: #3fb950; }
+        .meter-fill.mem { background: #58a6ff; }
+        .meter-fill.swap { background: #d29922; }
+        
+        .meter-text {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: #c9d1d9;
+        }
+        
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            font-size: 11px;
+            color: #8b949e;
+        }
+        
+        .stat-item span {
+            color: #c9d1d9;
+        }
+        
+        .process-table {
+            margin-top: 16px;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 60px 80px 60px 60px 80px 60px 1fr;
+            gap: 8px;
+            padding: 6px 8px;
+            background: #58a6ff;
+            color: #0d1117;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 60px 80px 60px 60px 80px 60px 1fr;
+            gap: 8px;
+            padding: 4px 8px;
+            font-size: 11px;
+            border-bottom: 1px solid #21262d;
+        }
+        
+        .table-row:hover {
+            background: #161b22;
+        }
+        
+        .table-row.highlight {
+            background: #1f6feb22;
+        }
+        
+        .pid { color: #8b949e; }
+        .user { color: #3fb950; }
+        .cpu-col { color: #f85149; }
+        .mem-col { color: #58a6ff; }
+        .time-col { color: #d29922; }
+        .cmd { color: #c9d1d9; }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .service-box {
+            border: 1px solid #30363d;
+            padding: 12px;
+            background: #161b22;
+        }
+        
+        .service-name {
+            color: #8b949e;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+        
+        .service-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-dot.running { background: #3fb950; }
+        .status-dot.stopped { background: #f85149; }
+        .status-dot.warning { background: #d29922; }
+        
+        .service-state {
+            font-size: 12px;
+        }
+        
+        .service-state.running { color: #3fb950; }
+        .service-state.stopped { color: #f85149; }
+        .service-state.warning { color: #d29922; }
+        
+        .footer-bar {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #30363d;
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+        }
+        
+        .footer-key {
+            color: #0d1117;
+            background: #58a6ff;
+            padding: 1px 4px;
+            margin-right: 4px;
+        }
+        
+        .footer-label {
+            color: #8b949e;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .uptime-bar {
+            text-align: right;
+            font-size: 11px;
+            color: #8b949e;
+            margin-bottom: 8px;
+        }
+        
+        .uptime-bar span {
+            color: #3fb950;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <span class="terminal-btn btn-close"></span>
+            <span class="terminal-btn btn-minimize"></span>
+            <span class="terminal-btn btn-maximize"></span>
+            <span class="terminal-title">htop - camp-server</span>
+        </div>
+        <div class="terminal-body">
+            <div class="uptime-bar">
+                Uptime: <span>3 days, 14:23:07</span> | Load: <span>0.15 0.12 0.09</span>
+            </div>
+            
+            <div class="htop-header">
+                <div class="meter-group">
+                    <h3>CPU & Memory</h3>
+                    <div class="meter">
+                        <span class="meter-label">CPU</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill cpu" style="width: 23%;"></div>
+                            <span class="meter-text">23.4%</span>
+                        </div>
+                    </div>
+                    <div class="meter">
+                        <span class="meter-label">Mem</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill mem" style="width: 45%;"></div>
+                            <span class="meter-text">924M/2.0G</span>
+                        </div>
+                    </div>
+                    <div class="meter">
+                        <span class="meter-label">Swp</span>
+                        <div class="meter-bar">
+                            <div class="meter-fill swap" style="width: 8%;"></div>
+                            <span class="meter-text">82M/1.0G</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="meter-group">
+                    <h3>System Stats</h3>
+                    <div class="stats-row">
+                        <div class="stat-item">Tasks: <span>87</span></div>
+                        <div class="stat-item">Running: <span>2</span></div>
+                        <div class="stat-item">Sleeping: <span>85</span></div>
+                    </div>
+                    <div class="stats-row" style="margin-top: 8px;">
+                        <div class="stat-item">Threads: <span>142</span></div>
+                        <div class="stat-item">Users: <span>3</span></div>
+                    </div>
+                    <div class="stats-row" style="margin-top: 8px;">
+                        <div class="stat-item">Disk /: <span>34% used</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-table">
+                <div class="table-header">
+                    <span>PID</span>
+                    <span>USER</span>
+                    <span>CPU%</span>
+                    <span>MEM%</span>
+                    <span>TIME+</span>
+                    <span>STATE</span>
+                    <span>COMMAND</span>
+                </div>
+                
+                <div class="table-row highlight">
+                    <span class="pid">1842</span>
+                    <span class="user">www-data</span>
+                    <span class="cpu-col">2.3</span>
+                    <span class="mem-col">1.8</span>
+                    <span class="time-col">0:45.12</span>
+                    <span>S</span>
+                    <span class="cmd">nginx: worker process</span>
+                </div>
+                <div class="table-row highlight">
+                    <span class="pid">1841</span>
+                    <span class="user">root</span>
+                    <span class="cpu-col">0.0</span>
+                    <span class="mem-col">0.4</span>
+                    <span class="time-col">0:00.03</span>
+                    <span>S</span>
+                    <span class="cmd">nginx: master process</span>
+                </div>
+                <div class="table-row">
+                    <span class="pid">892</span>
+                    <span class="user">root</span>
+                    <span class="cpu-col">0.7</span>
+                    <span class="mem-col">2.1</span>
+                    <span class="time-col">1:23.45</span>
+                    <span>S</span>
+                    <span class="cmd">/usr/lib/systemd/systemd</span>
+                </div>
+                <div class="table-row">
+                    <span class="pid">1024</span>
+                    <span class="user">syslog</span>
+                    <span class="cpu-col">0.1</span>
+                    <span class="mem-col">0.6</span>
+                    <span class="time-col">0:12.89</span>
+                    <span>S</span>
+                    <span class="cmd">/usr/sbin/rsyslogd</span>
+                </div>
+                <div class="table-row">
+                    <span class="pid">1156</span>
+                    <span class="user">root</span>
+                    <span class="cpu-col">0.0</span>
+                    <span class="mem-col">1.2</span>
+                    <span class="time-col">0:05.67</span>
+                    <span>S</span>
+                    <span class="cmd">/usr/sbin/sshd -D</span>
+                </div>
+                <div class="table-row">
+                    <span class="pid">2341</span>
+                    <span class="user">student</span>
+                    <span class="cpu-col">0.3</span>
+                    <span class="mem-col">0.8</span>
+                    <span class="time-col">0:02.34</span>
+                    <span>S</span>
+                    <span class="cmd">-bash</span>
+                </div>
+                <div class="table-row">
+                    <span class="pid">2456</span>
+                    <span class="user">student</span>
+                    <span class="cpu-col">0.0</span>
+                    <span class="mem-col">0.3</span>
+                    <span class="time-col">0:00.12</span>
+                    <span>S</span>
+                    <span class="cmd">vim nginx.conf</span>
+                </div>
+            </div>
+            
+            <div class="service-grid">
+                <div class="service-box">
+                    <div class="service-name">nginx.service</div>
+                    <div class="service-status">
+                        <span class="status-dot running"></span>
+                        <span class="service-state running">active (running)</span>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <div class="service-name">ssh.service</div>
+                    <div class="service-status">
+                        <span class="status-dot running"></span>
+                        <span class="service-state running">active (running)</span>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <div class="service-name">ufw.service</div>
+                    <div class="service-status">
+                        <span class="status-dot warning"></span>
+                        <span class="service-state warning">inactive</span>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <div class="service-name">cron.service</div>
+                    <div class="service-status">
+                        <span class="status-dot running"></span>
+                        <span class="service-state running">active (running)</span>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <div class="service-name">mysql.service</div>
+                    <div class="service-status">
+                        <span class="status-dot stopped"></span>
+                        <span class="service-state stopped">not installed</span>
+                    </div>
+                </div>
+                <div class="service-box">
+                    <div class="service-name">docker.service</div>
+                    <div class="service-status">
+                        <span class="status-dot stopped"></span>
+                        <span class="service-state stopped">not installed</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bar">
+                <span><span class="footer-key">F1</span><span class="footer-label">Help</span></span>
+                <span><span class="footer-key">F2</span><span class="footer-label">Setup</span></span>
+                <span><span class="footer-key">F3</span><span class="footer-label">Search</span></span>
+                <span><span class="footer-key">F5</span><span class="footer-label">Tree</span></span>
+                <span><span class="footer-key">F9</span><span class="footer-label">Kill</span></span>
+                <span><span class="footer-key">F10</span><span class="footer-label">Quit</span></span>
+            </div>
+            
+            <a href="/" class="back-link">[q] Back to index</a>
+        </div>
+    </div>
+</body>
+</html>

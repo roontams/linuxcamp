@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>server@linux-camp:~</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .terminal {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .terminal-header {
+            background: #161b22;
+            padding: 8px 16px;
+            border: 1px solid #30363d;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .btn-close { background: #f85149; }
+        .btn-minimize { background: #d29922; }
+        .btn-maximize { background: #3fb950; }
+        
+        .terminal-title {
+            color: #8b949e;
+            font-size: 12px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .terminal-body {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 24px;
+            min-height: 500px;
+        }
+        
+        .line {
+            margin-bottom: 4px;
+        }
+        
+        .prompt {
+            color: #3fb950;
+        }
+        
+        .prompt::before {
+            content: "$ ";
+            color: #8b949e;
+        }
+        
+        .output {
+            color: #c9d1d9;
+            padding-left: 18px;
+        }
+        
+        .highlight {
+            color: #58a6ff;
+        }
+        
+        .warning {
+            color: #d29922;
+        }
+        
+        .success {
+            color: #3fb950;
+        }
+        
+        .error {
+            color: #f85149;
+        }
+        
+        .ascii-logo {
+            color: #58a6ff;
+            margin: 16px 0;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+        
+        .divider {
+            border: none;
+            border-top: 1px dashed #30363d;
+            margin: 20px 0;
+        }
+        
+        .nav-section {
+            margin-top: 24px;
+            padding: 16px;
+            border: 1px solid #30363d;
+            background: #161b22;
+        }
+        
+        .nav-section a {
+            color: #58a6ff;
+            text-decoration: none;
+            display: block;
+            padding: 6px 0;
+        }
+        
+        .nav-section a:hover {
+            color: #79c0ff;
+            text-decoration: underline;
+        }
+        
+        .nav-section a::before {
+            content: "-> ";
+            color: #8b949e;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #c9d1d9;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+        
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        
+        .info-table {
+            margin: 12px 0;
+            padding-left: 18px;
+        }
+        
+        .info-row {
+            display: flex;
+        }
+        
+        .info-label {
+            color: #8b949e;
+            min-width: 140px;
+        }
+        
+        .info-value {
+            color: #c9d1d9;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <span class="terminal-btn btn-close"></span>
+            <span class="terminal-btn btn-minimize"></span>
+            <span class="terminal-btn btn-maximize"></span>
+            <span class="terminal-title">server@linux-camp: ~</span>
+        </div>
+        <div class="terminal-body">
+            <div class="line">
+                <span class="prompt">cat /etc/motd</span>
+            </div>
+            
+            <pre class="ascii-logo">
+ _     _                       ____                      
+| |   (_)_ __  _   ___  __    / ___|__ _ _ __ ___  _ __  
+| |   | | '_ \| | | \ \/ /   | |   / _` | '_ ` _ \| '_ \ 
+| |___| | | | | |_| |>  <    | |__| (_| | | | | | | |_) |
+|_____|_|_| |_|\__,_/_/\_\    \____\__,_|_| |_| |_| .__/ 
+                                                  |_|    
+            </pre>
+            
+            <div class="output">Welcome to Linux Infrastructure Camp 2025</div>
+            <div class="output">Busan Software Meister High School - Winter Session</div>
+            
+            <hr class="divider">
+            
+            <div class="line">
+                <span class="prompt">uname -a</span>
+            </div>
+            <div class="output">Linux camp-server 5.15.0-generic #1 SMP Ubuntu 22.04.3 LTS x86_64</div>
+            
+            <div class="line" style="margin-top: 16px;">
+                <span class="prompt">systemctl status nginx</span>
+            </div>
+            <div class="output">
+                <span class="success">● nginx.service - A high performance web server</span>
+            </div>
+            <div class="output">
+                Active: <span class="success">active (running)</span> since Day 3
+            </div>
+            
+            <div class="line" style="margin-top: 16px;">
+                <span class="prompt">cat /var/log/camp/progress.log</span>
+            </div>
+            <div class="info-table">
+                <div class="info-row">
+                    <span class="info-label">[Day 1]</span>
+                    <span class="info-value success">Linux Basics .......... DONE</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">[Day 2]</span>
+                    <span class="info-value success">Vim & Shell ........... DONE</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">[Day 3]</span>
+                    <span class="info-value warning">Web Server ............ IN PROGRESS</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">[Day 4]</span>
+                    <span class="info-value">Server Ops ............ PENDING</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">[Day 5]</span>
+                    <span class="info-value">Final Project ......... PENDING</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="output" style="padding-left: 0; margin-bottom: 8px;">Available pages:</div>
+                <a href="/about.html">/about.html     -- About this server</a>
+                <a href="/status.html">/status.html   -- System status dashboard</a>
+            </div>
+            
+            <div class="line" style="margin-top: 24px;">
+                <span class="prompt"><span class="cursor"></span></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

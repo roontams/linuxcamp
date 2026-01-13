@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>about@linux-camp:~</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .terminal {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .terminal-header {
+            background: #161b22;
+            padding: 8px 16px;
+            border: 1px solid #30363d;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .btn-close { background: #f85149; }
+        .btn-minimize { background: #d29922; }
+        .btn-maximize { background: #3fb950; }
+        
+        .terminal-title {
+            color: #8b949e;
+            font-size: 12px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .terminal-body {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 24px;
+            min-height: 600px;
+        }
+        
+        .neofetch-container {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 32px;
+        }
+        
+        .ascii-art {
+            color: #f78166;
+            font-size: 10px;
+            line-height: 1.1;
+            white-space: pre;
+            flex-shrink: 0;
+        }
+        
+        .system-info {
+            flex: 1;
+        }
+        
+        .info-header {
+            color: #f78166;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .info-divider {
+            color: #30363d;
+            margin-bottom: 12px;
+        }
+        
+        .info-line {
+            margin-bottom: 2px;
+        }
+        
+        .info-key {
+            color: #f78166;
+            display: inline-block;
+            min-width: 120px;
+        }
+        
+        .info-value {
+            color: #c9d1d9;
+        }
+        
+        .color-bar {
+            margin-top: 16px;
+            display: flex;
+            gap: 0;
+        }
+        
+        .color-block {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .section {
+            margin-top: 32px;
+            border: 1px solid #30363d;
+            background: #161b22;
+        }
+        
+        .section-header {
+            background: #21262d;
+            padding: 8px 16px;
+            border-bottom: 1px solid #30363d;
+            color: #8b949e;
+            font-size: 12px;
+        }
+        
+        .section-body {
+            padding: 16px;
+        }
+        
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .skill {
+            border: 1px solid #30363d;
+            padding: 4px 12px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+        
+        .skill.done {
+            border-color: #238636;
+            color: #3fb950;
+        }
+        
+        .skill.current {
+            border-color: #9e6a03;
+            color: #d29922;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: #58a6ff;
+            text-decoration: none;
+            padding: 8px 0;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .back-link::before {
+            content: "<- ";
+            color: #8b949e;
+        }
+        
+        .man-page {
+            margin-top: 24px;
+        }
+        
+        .man-title {
+            color: #c9d1d9;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+        
+        .man-section {
+            margin-bottom: 16px;
+        }
+        
+        .man-section-title {
+            color: #f78166;
+            margin-bottom: 4px;
+        }
+        
+        .man-content {
+            padding-left: 24px;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <span class="terminal-btn btn-close"></span>
+            <span class="terminal-btn btn-minimize"></span>
+            <span class="terminal-btn btn-maximize"></span>
+            <span class="terminal-title">about@linux-camp: ~</span>
+        </div>
+        <div class="terminal-body">
+            
+            <div class="neofetch-container">
+                <pre class="ascii-art">
+        _,met$$$$$gg.
+     ,g$$$$$$$$$$$$$$$P.
+   ,g$$P"        """Y$$.".
+  ,$$P'              `$$$.
+',$$P       ,ggs.     `$$b:
+`d$$'     ,$P"'   .    $$$
+ $$P      d$'     ,    $$P
+ $$:      $$.   -    ,d$$'
+ $$;      Y$b._   _,d$P'
+ Y$$.    `.`"Y$$$$P"'
+ `$$b      "-.__
+  `Y$$
+   `Y$$.
+     `$$b.
+       `Y$$b.
+          `"Y$b._
+              `"""
+                </pre>
+                
+                <div class="system-info">
+                    <div class="info-header">student@camp-server</div>
+                    <div class="info-divider">------------------</div>
+                    
+                    <div class="info-line">
+                        <span class="info-key">OS</span>
+                        <span class="info-value">Ubuntu 22.04.3 LTS x86_64</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Host</span>
+                        <span class="info-value">VMware Workstation 17</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Kernel</span>
+                        <span class="info-value">5.15.0-generic</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Shell</span>
+                        <span class="info-value">bash 5.1.16</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Terminal</span>
+                        <span class="info-value">linux (tty1)</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Web Server</span>
+                        <span class="info-value">nginx/1.18.0</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Editor</span>
+                        <span class="info-value">vim 8.2</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Camp</span>
+                        <span class="info-value">BSSM Winter 2025</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-key">Day</span>
+                        <span class="info-value">3 of 5</span>
+                    </div>
+                    
+                    <div class="color-bar">
+                        <div class="color-block" style="background: #0d1117;"></div>
+                        <div class="color-block" style="background: #f85149;"></div>
+                        <div class="color-block" style="background: #3fb950;"></div>
+                        <div class="color-block" style="background: #d29922;"></div>
+                        <div class="color-block" style="background: #58a6ff;"></div>
+                        <div class="color-block" style="background: #f78166;"></div>
+                        <div class="color-block" style="background: #a371f7;"></div>
+                        <div class="color-block" style="background: #c9d1d9;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">$ cat /etc/camp/skills.conf</div>
+                <div class="section-body">
+                    <div class="skill-list">
+                        <span class="skill done">linux-cli</span>
+                        <span class="skill done">file-permissions</span>
+                        <span class="skill done">vim</span>
+                        <span class="skill done">bash-scripting</span>
+                        <span class="skill done">pipes</span>
+                        <span class="skill done">redirection</span>
+                        <span class="skill current">nginx</span>
+                        <span class="skill current">web-server</span>
+                        <span class="skill">reverse-proxy</span>
+                        <span class="skill">ssl-tls</span>
+                        <span class="skill">firewall</span>
+                        <span class="skill">monitoring</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="man-page">
+                <div class="man-title">CAMP(7) - Linux Infrastructure Camp Manual</div>
+                
+                <div class="man-section">
+                    <div class="man-section-title">NAME</div>
+                    <div class="man-content">
+                        linux-camp - 5-day intensive server administration course
+                    </div>
+                </div>
+                
+                <div class="man-section">
+                    <div class="man-section-title">SYNOPSIS</div>
+                    <div class="man-content">
+                        camp [--day N] [--focus TOPIC] [--student NAME]
+                    </div>
+                </div>
+                
+                <div class="man-section">
+                    <div class="man-section-title">DESCRIPTION</div>
+                    <div class="man-content">
+                        Transform from GUI user to CLI power user in one week.<br>
+                        Build real servers. Break things. Fix them. Repeat.
+                    </div>
+                </div>
+                
+                <div class="man-section">
+                    <div class="man-section-title">SEE ALSO</div>
+                    <div class="man-content">
+                        nginx(8), systemctl(1), vim(1), bash(1)
+                    </div>
+                </div>
+            </div>
+            
+            <a href="/" class="back-link">cd /var/www/html</a>
+        </div>
+    </div>
+</body>
+</html>
