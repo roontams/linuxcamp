@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Camp - Server Test</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            border: 1px solid #00ff00;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '[ Linux Camp 2025 ]';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #0a0a0a;
+            padding: 0 10px;
+            font-size: 0.9em;
+        }
+        
+        .header h1 {
+            color: #00ff00;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        /* Input Section */
+        .input-section {
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #111;
+        }
+        
+        .prompt {
+            color: #00ff00;
+            margin-bottom: 15px;
+        }
+        
+        .prompt::before {
+            content: '$ ';
+            color: #888;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .input-label {
+            color: #888;
+        }
+        
+        #ip-input {
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 10px 15px;
+            font-family: inherit;
+            font-size: 1em;
+            width: 200px;
+        }
+        
+        #ip-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        #ip-input::placeholder {
+            color: #444;
+        }
+        
+        .btn-test {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 25px;
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-test:hover {
+            background: #00cc00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+        
+        .btn-test:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        /* Results Section */
+        .results-section {
+            border: 1px solid #333;
+            background: #111;
+        }
+        
+        .results-header {
+            background: #1a1a1a;
+            padding: 10px 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .results-title {
+            color: #00ff00;
+        }
+        
+        .score-display {
+            color: #ffcc00;
+            font-size: 1.2em;
+        }
+        
+        .results-body {
+            padding: 15px 20px;
+        }
+        
+        .mission-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mission-item:last-child {
+            border-bottom: none;
+        }
+        
+        .mission-info {
+            flex: 1;
+        }
+        
+        .mission-name {
+            color: #ccc;
+            margin-bottom: 3px;
+        }
+        
+        .mission-desc {
+            color: #666;
+            font-size: 0.85em;
+        }
+        
+        .mission-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .mission-points {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .status-icon {
+            font-size: 1.2em;
+            width: 60px;
+            text-align: center;
+        }
+        
+        .status-waiting {
+            color: #444;
+        }
+        
+        .status-testing {
+            color: #ffcc00;
+        }
+        
+        .status-pass {
+            color: #00ff00;
+        }
+        
+        .status-fail {
+            color: #ff3333;
+        }
+        
+        /* Manual Check Section */
+        .manual-section {
+            border: 1px solid #ffcc00;
+            margin-top: 20px;
+            background: #1a1a00;
+        }
+        
+        .manual-header {
+            background: #2a2a00;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ffcc00;
+            color: #ffcc00;
+        }
+        
+        .manual-body {
+            padding: 15px 20px;
+        }
+        
+        .manual-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .manual-item:last-child {
+            border-bottom: none;
+        }
+        
+        .manual-info {
+            flex: 1;
+        }
+        
+        .manual-name {
+            color: #ffcc00;
+            margin-bottom: 3px;
+        }
+        
+        .manual-desc {
+            color: #888;
+            font-size: 0.85em;
+        }
+        
+        .manual-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .manual-points {
+            color: #888;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+        
+        /* Log Section */
+        .log-section {
+            border: 1px solid #333;
+            margin-top: 20px;
+            background: #000;
+        }
+        
+        .log-header {
+            background: #1a1a1a;
+            padding: 10px 20px;
+            border-bottom: 1px solid #333;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .log-body {
+            padding: 15px 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.85em;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            color: #888;
+        }
+        
+        .log-entry.info {
+            color: #00ff00;
+        }
+        
+        .log-entry.error {
+            color: #ff3333;
+        }
+        
+        .log-entry.success {
+            color: #00ff00;
+        }
+        
+        .log-entry.warn {
+            color: #ffcc00;
+        }
+        
+        .log-time {
+            color: #555;
+            margin-right: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #222;
+            color: #444;
+            font-size: 0.85em;
+            text-align: center;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Day 5 Server Test Terminal</h1>
+            <p>// TechStart 서버 미션 검증 시스템</p>
+        </div>
+        
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="prompt">Enter your VM IP address to begin testing</div>
+            <div class="input-row">
+                <span class="input-label">target_ip =</span>
+                <input type="text" id="ip-input" placeholder="192.168.x.x">
+                <button class="btn-test" id="btn-test" onclick="runAllTests()">[ RUN TEST ]</button>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="results-section">
+            <div class="results-header">
+                <span class="results-title">== AUTO TEST RESULTS ==</span>
+                <span class="score-display" id="score-display">SCORE: --/100</span>
+            </div>
+            <div class="results-body">
+                <div class="mission-item" id="mission-1">
+                    <div class="mission-info">
+                        <div class="mission-name">Mission 1: HTTP Port 9090</div>
+                        <div class="mission-desc">GET http://{ip}:9090 → 200 OK</div>
+                    </div>
+                    <div class="mission-status">
+                        <span class="mission-points">15 pts</span>
+                        <span class="status-icon status-waiting" id="status-1">[ ]</span>
+                    </div>
+                </div>
+                
+                <div class="mission-item" id="mission-2">
+                    <div class="mission-info">
+                        <div class="mission-name">Mission 2: TechStart Branding</div>
+                        <div class="mission-desc">Response body contains "TechStart"</div>
+                    </div>
+                    <div class="mission-status">
+                        <span class="mission-points">15 pts</span>
+                        <span class="status-icon status-waiting" id="status-2">[ ]</span>
+                    </div>
+                </div>
+                
+                <div class="mission-item" id="mission-3">
+                    <div class="mission-info">
+                        <div class="mission-name">Mission 3: CORS Headers</div>
+                        <div class="mission-desc">Access-Control-Allow-Origin header exists</div>
+                    </div>
+                    <div class="mission-status">
+                        <span class="mission-points">15 pts</span>
+                        <span class="status-icon status-waiting" id="status-3">[ ]</span>
+                    </div>
+                </div>
+                
+                <div class="mission-item" id="mission-4">
+                    <div class="mission-info">
+                        <div class="mission-name">Mission 4: Custom 404 Page</div>
+                        <div class="mission-desc">404 response contains "TechStart"</div>
+                    </div>
+                    <div class="mission-status">
+                        <span class="mission-points">10 pts</span>
+                        <span class="status-icon status-waiting" id="status-4">[ ]</span>
+                    </div>
+                </div>
+                
+                <div class="mission-item" id="mission-5">
+                    <div class="mission-info">
+                        <div class="mission-name">Mission 5: /status Endpoint</div>
+                        <div class="mission-desc">GET http://{ip}:80/status → 200 OK (스크립트/Cron은 강사 확인)</div>
+                    </div>
+                    <div class="mission-status">
+                        <span class="mission-points">10 pts</span>
+                        <span class="status-icon status-waiting" id="status-5">[ ]</span>
+                    </div>
+                </div>
+                
+                <div class="mission-item" id="mission-6">
+                    <div class="mission-info">
+                        <div class="mission-name">Mission 6: Rate Limiting 조정</div>
+                        <div class="mission-desc">10개 요청 중 5개+ 503 응답 (rate=2r/s, burst=3)</div>
+                    </div>
+                    <div class="mission-status">
+                        <span class="mission-points">20 pts</span>
+                        <span class="status-icon status-waiting" id="status-6">[ ]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Manual Check Section (강사용) -->
+        <div class="manual-section">
+            <div class="manual-header">== SELF CHECK (Mission 5 추가 점수) ==</div>
+            <div class="manual-body">
+                <div class="manual-item">
+                    <div class="manual-info">
+                        <div class="manual-name">5-A: monitor.sh 스크립트</div>
+                        <div class="manual-desc">~/monitor.sh 존재 & 실행 가능 & 시스템 정보 출력</div>
+                    </div>
+                    <span class="manual-points">+10 pts</span>
+                    <input type="checkbox" class="manual-checkbox" id="manual-5a" onchange="updateScore()">
+                </div>
+                <div class="manual-item">
+                    <div class="manual-info">
+                        <div class="manual-name">5-B: Cron 등록</div>
+                        <div class="manual-desc">crontab -l 에 monitor.sh 등록됨</div>
+                    </div>
+                    <span class="manual-points">+5 pts</span>
+                    <input type="checkbox" class="manual-checkbox" id="manual-5b" onchange="updateScore()">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Log Section -->
+        <div class="log-section">
+            <div class="log-header">
+                <span>== SYSTEM LOG ==</span>
+                <span id="log-count">0 entries</span>
+            </div>
+            <div class="log-body" id="log-body">
+                <div class="log-entry info">
+                    <span class="log-time">[READY]</span>
+                    <span>Waiting for target IP...</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            Linux Infrastructure Camp 2025 | Busan Software Meister High School
+        </div>
+    </div>
+    
+    <script>
+        // 자동 테스트 미션 (웹에서 테스트 가능)
+        const MISSIONS = [
+            { id: 1, points: 15 },  // Port 9090
+            { id: 2, points: 15 },  // TechStart Branding
+            { id: 3, points: 15 },  // CORS Headers
+            { id: 4, points: 10 },  // Custom 404
+            { id: 5, points: 10 },  // /status endpoint (웹 테스트 부분)
+            { id: 6, points: 20 }   // Rate Limiting
+        ];
+        
+        // 수동 확인 점수
+        const MANUAL_CHECKS = [
+            { id: '5a', points: 10 },  // monitor.sh 스크립트
+            { id: '5b', points: 5 }    // Cron 등록
+        ];
+        
+        let testResults = {};
+        let logCount = 0;
+        
+        function getTime() {
+            const now = new Date();
+            return now.toTimeString().split(' ')[0];
+        }
+        
+        function addLog(message, type = 'info') {
+            const logBody = document.getElementById('log-body');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="log-time">[${getTime()}]</span><span>${message}</span>`;
+            logBody.appendChild(entry);
+            logBody.scrollTop = logBody.scrollHeight;
+            
+            logCount++;
+            document.getElementById('log-count').textContent = `${logCount} entries`;
+        }
+        
+        function setStatus(missionId, status) {
+            const statusEl = document.getElementById(`status-${missionId}`);
+            statusEl.className = 'status-icon';
+            
+            switch(status) {
+                case 'testing':
+                    statusEl.classList.add('status-testing');
+                    statusEl.textContent = '[...]';
+                    break;
+                case 'pass':
+                    statusEl.classList.add('status-pass');
+                    statusEl.textContent = '[OK]';
+                    break;
+                case 'fail':
+                    statusEl.classList.add('status-fail');
+                    statusEl.textContent = '[FAIL]';
+                    break;
+                default:
+                    statusEl.classList.add('status-waiting');
+                    statusEl.textContent = '[ ]';
+            }
+        }
+        
+        function updateScore() {
+            let score = 0;
+            
+            // 자동 테스트 점수
+            MISSIONS.forEach(m => {
+                if (testResults[m.id] === true) {
+                    score += m.points;
+                }
+            });
+            
+            // 수동 확인 점수
+            MANUAL_CHECKS.forEach(m => {
+                if (document.getElementById(`manual-${m.id}`).checked) {
+                    score += m.points;
+                }
+            });
+            
+            document.getElementById('score-display').textContent = `SCORE: ${score}/100`;
+        }
+        
+        function validateIP(ip) {
+            const pattern = /^(\d{1,3}\.){3}\d{1,3}$/;
+            if (!pattern.test(ip)) return false;
+            
+            const parts = ip.split('.');
+            return parts.every(part => {
+                const num = parseInt(part);
+                return num >= 0 && num <= 255;
+            });
+        }
+        
+        // Mission 1: Port 9090 개방
+        async function testMission1(ip) {
+            setStatus(1, 'testing');
+            addLog(`Testing port 9090: http://${ip}:9090`);
+            
+            try {
+                const response = await fetch(`http://${ip}:9090`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    testResults[1] = true;
+                    setStatus(1, 'pass');
+                    addLog('Mission 1: PASS - Port 9090 responding', 'success');
+                } else {
+                    throw new Error(`Status ${response.status}`);
+                }
+            } catch (e) {
+                testResults[1] = false;
+                setStatus(1, 'fail');
+                addLog(`Mission 1: FAIL - ${e.message}`, 'error');
+            }
+        }
+        
+        // Mission 2: TechStart 브랜딩
+        async function testMission2(ip) {
+            setStatus(2, 'testing');
+            addLog('Checking for "TechStart" in response body...');
+            
+            try {
+                const response = await fetch(`http://${ip}:80`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                const body = await response.text();
+                
+                if (body.toLowerCase().includes('techstart')) {
+                    testResults[2] = true;
+                    setStatus(2, 'pass');
+                    addLog('Mission 2: PASS - "TechStart" found in response', 'success');
+                } else {
+                    throw new Error('"TechStart" not found');
+                }
+            } catch (e) {
+                testResults[2] = false;
+                setStatus(2, 'fail');
+                addLog(`Mission 2: FAIL - ${e.message}`, 'error');
+            }
+        }
+        
+        // Mission 3: CORS Headers
+        async function testMission3(ip) {
+            setStatus(3, 'testing');
+            addLog('Testing CORS headers...');
+            
+            try {
+                const response = await fetch(`http://${ip}:80`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                const corsHeader = response.headers.get('Access-Control-Allow-Origin');
+                
+                if (corsHeader) {
+                    testResults[3] = true;
+                    setStatus(3, 'pass');
+                    addLog(`Mission 3: PASS - CORS header found: ${corsHeader}`, 'success');
+                } else {
+                    throw new Error('No CORS header');
+                }
+            } catch (e) {
+                testResults[3] = false;
+                setStatus(3, 'fail');
+                addLog(`Mission 3: FAIL - ${e.message}`, 'error');
+            }
+        }
+        
+        // Mission 4: Custom 404 Page
+        async function testMission4(ip) {
+            setStatus(4, 'testing');
+            const randomPath = `/not-found-${Date.now()}`;
+            addLog(`Testing custom 404 page: ${randomPath}`);
+            
+            try {
+                const response = await fetch(`http://${ip}:80${randomPath}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                const body = await response.text();
+                
+                if (body.toLowerCase().includes('techstart')) {
+                    testResults[4] = true;
+                    setStatus(4, 'pass');
+                    addLog('Mission 4: PASS - Custom 404 contains "TechStart"', 'success');
+                } else {
+                    throw new Error('"TechStart" not in 404 page');
+                }
+            } catch (e) {
+                testResults[4] = false;
+                setStatus(4, 'fail');
+                addLog(`Mission 4: FAIL - ${e.message}`, 'error');
+            }
+        }
+        
+        // Mission 5: /status Endpoint (웹 테스트 부분만)
+        async function testMission5(ip) {
+            setStatus(5, 'testing');
+            addLog('Testing /status endpoint...');
+            
+            try {
+                const response = await fetch(`http://${ip}:80/status`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    const body = await response.text();
+                    testResults[5] = true;
+                    setStatus(5, 'pass');
+                    addLog('Mission 5: PASS - /status endpoint responding', 'success');
+                    addLog('※ 스크립트/Cron 확인은 강사가 수동으로 체크하세요', 'warn');
+                } else {
+                    throw new Error(`Status ${response.status}`);
+                }
+            } catch (e) {
+                testResults[5] = false;
+                setStatus(5, 'fail');
+                addLog(`Mission 5: FAIL - ${e.message}`, 'error');
+            }
+        }
+        
+        // Mission 6: Rate Limiting 조정
+        async function testMission6(ip) {
+            setStatus(6, 'testing');
+            addLog('Testing rate limiting (sending 10 rapid requests)...');
+            
+            try {
+                const requests = [];
+                
+                for (let i = 0; i < 10; i++) {
+                    requests.push(
+                        fetch(`http://${ip}:80?cachebust=${Date.now()}_${i}`, {
+                            method: 'GET',
+                            mode: 'cors',
+                            cache: 'no-cache'
+                        }).then(r => r.status).catch(() => 0)
+                    );
+                }
+                
+                const results = await Promise.all(requests);
+                const count503 = results.filter(s => s === 503 || s === 429).length;
+                const count200 = results.filter(s => s === 200).length;
+                
+                addLog(`Responses: 200=${count200}, 503/429=${count503}`, 'info');
+                
+                if (count503 >= 5) {
+                    testResults[6] = true;
+                    setStatus(6, 'pass');
+                    addLog(`Mission 6: PASS - Rate limiting strict (${count503}/10 blocked)`, 'success');
+                } else {
+                    throw new Error(`Need 5+ blocked, got ${count503}`);
+                }
+            } catch (e) {
+                testResults[6] = false;
+                setStatus(6, 'fail');
+                addLog(`Mission 6: FAIL - ${e.message}`, 'error');
+            }
+        }
+        
+        async function runAllTests() {
+            const ip = document.getElementById('ip-input').value.trim();
+            
+            if (!ip) {
+                addLog('ERROR: Please enter an IP address', 'error');
+                return;
+            }
+            
+            if (!validateIP(ip)) {
+                addLog('ERROR: Invalid IP address format', 'error');
+                return;
+            }
+            
+            // Reset
+            testResults = {};
+            MISSIONS.forEach(m => setStatus(m.id, 'waiting'));
+            document.getElementById('score-display').textContent = 'SCORE: --/100';
+            
+            const btn = document.getElementById('btn-test');
+            btn.disabled = true;
+            btn.textContent = '[ TESTING... ]';
+            
+            addLog('='.repeat(50), 'info');
+            addLog(`Starting test sequence for ${ip}`, 'info');
+            addLog('='.repeat(50), 'info');
+            
+            // Mission 1: Port 9090
+            await testMission1(ip);
+            await new Promise(r => setTimeout(r, 300));
+            
+            // Mission 2: TechStart Branding
+            await testMission2(ip);
+            await new Promise(r => setTimeout(r, 300));
+            
+            // Mission 3: CORS Headers
+            await testMission3(ip);
+            await new Promise(r => setTimeout(r, 300));
+            
+            // Mission 4: Custom 404
+            await testMission4(ip);
+            await new Promise(r => setTimeout(r, 300));
+            
+            // Mission 5: /status Endpoint
+            await testMission5(ip);
+            await new Promise(r => setTimeout(r, 300));
+            
+            // Mission 6: Rate Limiting
+            await testMission6(ip);
+            
+            updateScore();
+            
+            addLog('='.repeat(50), 'info');
+            addLog('Auto test sequence complete', 'info');
+            
+            const passed = Object.values(testResults).filter(v => v === true).length;
+            if (passed === 6) {
+                addLog('*** ALL AUTO TESTS PASSED! ***', 'success');
+                addLog('※ Mission 5 스크립트/Cron은 강사가 수동 확인 후 체크하세요', 'warn');
+            } else {
+                addLog(`Passed: ${passed}/6 auto tests`, 'warn');
+            }
+            
+            btn.disabled = false;
+            btn.textContent = '[ RUN TEST ]';
+        }
+        
+        document.getElementById('ip-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                runAllTests();
+            }
+        });
+    </script>
+</body>
+</html>
